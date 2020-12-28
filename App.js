@@ -10,40 +10,38 @@ import {
 const BUSSTOP_URL = "https://arrivelah2.busrouter.sg/?id=83139";
 
 export default function App() {
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
   const [arrival, setArrival] = useState("");
 
   function loadBusStopData() {
-    setLoading(true)
+    setLoading(true);
 
     fetch(BUSSTOP_URL)
       .then((response) => {
-        return response.json()
+        return response.json();
       })
       .then((responseData) => {
-
         const myBus = responseData.services.filter(
           (item) => item.no === "155"
         )[0];
-        const duration_s = Math.floor(myBus.next.duration_ms / 1000)
-        const minutes = Math.floor(duration_s / 60)
-        const seconds = duration_s % 60
-        setArrival(`${minutes} minutes and ${seconds} seconds`)
-        setLoading(false)
-
-      })
+        const duration_s = Math.floor(myBus.next["duration_ms"] / 1000);
+        const minutes = Math.floor(duration_s / 60);
+        const seconds = duration_s % 60;
+        setArrival(`${minutes} minutes and ${seconds} seconds`);
+        setLoading(false);
+      });
   }
 
   useEffect(() => {
-    const interval = setInterval(loadBusStopData,10000)
+    const interval = setInterval(loadBusStopData, 10000);
     return () => clearInterval(interval);
   }, []);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Bus arrival time:</Text>
+      <Text style={styles.title}>Bus 155 arrival time:</Text>
       <Text style={styles.arrivalTime}>
-        { loading ? <ActivityIndicator size="large" /> : arrival}
+        {loading ? <ActivityIndicator size="large" /> : arrival}
       </Text>
       <TouchableOpacity style={styles.button}>
         <Text style={styles.buttonText}>Refresh!</Text>
